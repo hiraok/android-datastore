@@ -36,8 +36,10 @@ enum class SortOrder {
  */
 class UserPreferencesRepository private constructor(context: Context) {
 
-    private val sharedPreferences =
-        context.applicationContext.getSharedPreferences(USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    private val dataStore: DataStore<Preferences> = context.createDataStore(
+        name = USER_PREFERENCES_NAME,
+        migrations = listOf(SharedPreferencesMigration(context, USER_PREFERENCES_NAME))
+    )
 
     // Keep the sort order as a stream of changes
     private val _sortOrderFlow = MutableStateFlow(sortOrder)
