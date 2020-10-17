@@ -41,6 +41,10 @@ class UserPreferencesRepository private constructor(context: Context) {
         migrations = listOf(SharedPreferencesMigration(context, USER_PREFERENCES_NAME))
     )
 
+    private object PreferencesKeys {
+        val SHOW_COMPLETED = preferencesKey<Boolean>("show_completed")
+        val SORT_ORDER = preferencesKey<String>("sort_order")
+    }
 
         }
 
