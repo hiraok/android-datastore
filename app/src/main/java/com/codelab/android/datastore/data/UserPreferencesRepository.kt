@@ -89,6 +89,25 @@ class UserPreferencesRepository private constructor(context: Context) {
         }
     }
 
+    suspend fun enableSortByPriority(enable: Boolean) {
+        dataStore.edit { preferences ->
+            val currentOrder =
+                SortOrder.valueOf(preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.NONE.name)
+            val newSortOrder =
+                if (enable) {
+                    if (currentOrder == SortOrder.BY_DEADLINE) {
+                        SortOrder.BY_DEADLINE_AND_PRIORITY
+                    } else {
+                        SortOrder.BY_PRIORITY
+                    }
+                } else {
+                    if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
+                        SortOrder.BY_DEADLINE
+                    } else {
+                        SortOrder.NONE
+                    }
+                }
+            preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
         }
     }
 
