@@ -58,6 +58,10 @@ class UserPreferencesRepository private constructor(context: Context) {
         UserPreferences(showCompleted, sortOrder)
     }
 
+    suspend fun updateShowCompleted(showCompleted: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SHOW_COMPLETED] = showCompleted
+        }
     }
 
                 } else {
