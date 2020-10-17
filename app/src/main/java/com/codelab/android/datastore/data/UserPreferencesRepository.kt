@@ -46,7 +46,17 @@ class UserPreferencesRepository private constructor(context: Context) {
         val SORT_ORDER = preferencesKey<String>("sort_order")
     }
 
+    val userPreferencesFlow: Flow<UserPreferences> = dataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
         }
+    }.map {
+        val sortOrder = SortOrder.valueOf(it[PreferencesKeys.SORT_ORDER] ?: SortOrder.NONE.name)
+        val showCompleted = it[PreferencesKeys.SHOW_COMPLETED] ?: false
+        UserPreferences(showCompleted, sortOrder)
+    }
 
     }
 
