@@ -41,45 +41,11 @@ class UserPreferencesRepository private constructor(context: Context) {
         migrations = listOf(SharedPreferencesMigration(context, USER_PREFERENCES_NAME))
     )
 
-    // Keep the sort order as a stream of changes
-    private val _sortOrderFlow = MutableStateFlow(sortOrder)
-    val sortOrderFlow: StateFlow<SortOrder> = _sortOrderFlow
 
-    /**
-     * Get the sort order. By default, sort order is None.
-     */
-    private val sortOrder: SortOrder
-        get() {
-            val order = sharedPreferences.getString(SORT_ORDER_KEY, SortOrder.NONE.name)
-            return SortOrder.valueOf(order ?: SortOrder.NONE.name)
         }
 
-    fun enableSortByDeadline(enable: Boolean) {
-        val currentOrder = sortOrderFlow.value
-        val newSortOrder =
-            if (enable) {
-                if (currentOrder == SortOrder.BY_PRIORITY) {
-                    SortOrder.BY_DEADLINE_AND_PRIORITY
-                } else {
-                    SortOrder.BY_DEADLINE
-                }
-            } else {
-                if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
-                    SortOrder.BY_PRIORITY
-                } else {
-                    SortOrder.NONE
-                }
-            }
-        updateSortOrder(newSortOrder)
-        _sortOrderFlow.value = newSortOrder
     }
 
-    fun enableSortByPriority(enable: Boolean) {
-        val currentOrder = sortOrderFlow.value
-        val newSortOrder =
-            if (enable) {
-                if (currentOrder == SortOrder.BY_DEADLINE) {
-                    SortOrder.BY_DEADLINE_AND_PRIORITY
                 } else {
                     SortOrder.BY_PRIORITY
                 }
@@ -94,9 +60,6 @@ class UserPreferencesRepository private constructor(context: Context) {
         _sortOrderFlow.value = newSortOrder
     }
 
-    private fun updateSortOrder(sortOrder: SortOrder) {
-        sharedPreferences.edit {
-            putString(SORT_ORDER_KEY, sortOrder.name)
         }
     }
 
